@@ -2,18 +2,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sign Up</title>
+    <title>Sign Up | Modern Auth</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Sign Up</h1>
+        <h1>Create your account</h1>
         <form class="auth-form" onsubmit="handleSignUp(event)">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Sign Up</button>
+            <input type="email" id="email" placeholder="Email address" required>
+            <input type="password" id="password" placeholder="Create a password" required>
+            <button type="submit" class="btn">Get started</button>
         </form>
-        <p>Already have an account? <a href="/signin">Sign In</a></p>
+        <p class="auth-switch">Already have an account? <a href="/signin">Sign in</a></p>
     </div>
     <script src="/static/auth.js"></script>
 </body>

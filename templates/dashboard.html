@@ -2,17 +2,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Dashboard | Modern Auth</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Welcome, <span id="userName"></span>!</h1>
-        <button onclick="handleLogout()" class="btn">Logout</button>
+        <div class="welcome-hero">
+            <h1>Welcome back, <span id="userName"></span></h1>
+            <p>We're glad to see you again</p>
+        </div>
+        <button onclick="handleLogout()" class="btn" style="width: 100%;">Sign Out</button>
     </div>
     <script src="/static/auth.js"></script>
     <script>
-        document.getElementById('userName').textContent = localStorage.getItem('userEmail');
+        document.getElementById('userName').textContent = 
+            localStorage.getItem('userEmail')?.split('@')[0] || 'User';
     </script>
 </body>
 </html>
