@@ -145,35 +145,11 @@ textarea {
 
 .saved-notes-section {
   margin: 32px 0;
-  padding: 24px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
 }
 
 .saved-notes-section h2 {
   color: var(--white);
-  margin-bottom: 24px;
-  font-size: 24px;
-}
-
-.notes-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.note {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.note p {
-  color: var(--white);
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.5;
+  margin-bottom: 16px;
 }
 
 .no-notes {
