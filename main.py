@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from supabase import create_client
 import os
 
@@ -13,7 +13,7 @@ supabase = create_client(
 
 @app.route('/')
 def index():
-    return 'Auth Service'
+    return send_from_directory('templates', 'auth.html')
 
 @app.route('/signup', methods=['POST'])
 def signup():
