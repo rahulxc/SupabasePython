@@ -95,11 +95,16 @@ def get_notes():
             return jsonify({"error": "Invalid authorization header"}), 401
         
         token = auth_header.split(' ')[1]
-        supabase.auth.set_session(token)
+        try:
+            supabase.auth.set_session(token)
+        except Exception as session_error:
+            print(f"Session error: {session_error}")
+            return jsonify({"error": "Session expired"}), 401
         user = supabase.auth.get_user()
         if not user:
             return jsonify({"error": "User not found"}), 401
-        response = supabase.table('notes').select("*").eq('user_id', user.user.id).order('created_at', desc=True).execute()
+        response = supabase.table('notes').select("*").eq('user_id', user.user.id).execute()
+        print(f"Query response: {response}")  # Debug query
         return jsonify(response.data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400

@@ -58,6 +58,7 @@
                     window.location.href = '/signin';
                     return;
                 }
+                console.log("Using token:", token); // Debug token
                 const response = await fetch('/notes', {
                     headers: {
                         'Authorization': `Bearer ${token}`
