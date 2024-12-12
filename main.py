@@ -87,11 +87,14 @@ def logout():
 def get_notes():
     try:
         auth_header = request.headers.get('Authorization')
-        if not auth_header:
-            return jsonify({"error": "No authorization header"}), 401
+        if not auth_header or 'Bearer' not in auth_header:
+            return jsonify({"error": "Invalid authorization header"}), 401
+        
         token = auth_header.split(' ')[1]
         supabase.auth.set_session(token)
         user = supabase.auth.get_user()
+        if not user:
+            return jsonify({"error": "User not found"}), 401
         response = supabase.table('notes').select("*").eq('user_id', user.user.id).order('created_at', desc=True).execute()
         return jsonify(response.data), 200
     except Exception as e:
