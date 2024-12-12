@@ -26,7 +26,11 @@
     <script src="/static/auth.js"></script>
     <script>
         async function loadNotes() {
-            const response = await fetch('/notes');
+            const response = await fetch('/notes', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
             const notes = await response.json();
             const notesList = document.getElementById('notesList');
             notesList.innerHTML = notes.map(note => `
@@ -38,7 +42,12 @@
         }
 
         async function deleteNote(id) {
-            await fetch(`/notes/${id}`, { method: 'DELETE' });
+            await fetch(`/notes/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
             loadNotes();
         }
 
@@ -47,7 +56,10 @@
             const content = document.getElementById('noteContent').value;
             await fetch('/notes', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                },
                 body: JSON.stringify({content})
             });
             document.getElementById('noteContent').value = '';
