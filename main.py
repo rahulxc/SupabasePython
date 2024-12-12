@@ -67,7 +67,10 @@ def login():
         }
         return jsonify({
             "message": "Login successful",
-            "user": user_data
+            "user": user_data,
+            "session": {
+                "access_token": response.session.access_token
+            }
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -83,6 +86,11 @@ def logout():
 @app.route('/notes', methods=['GET'])
 def get_notes():
     try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header:
+            return jsonify({"error": "No authorization header"}), 401
+        token = auth_header.split(' ')[1]
+        supabase.auth.set_session(token)
         user = supabase.auth.get_user()
         response = supabase.table('notes').select("*").eq('user_id', user.user.id).order('created_at', desc=True).execute()
         return jsonify(response.data), 200
