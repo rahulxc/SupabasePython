@@ -26,7 +26,11 @@ def signup():
             "email": email,
             "password": password
         })
-        return jsonify({"message": "Signup successful", "user": response.user}), 201
+        user_data = {
+            "id": response.user.id,
+            "email": response.user.email,
+        }
+        return jsonify({"message": "Signup successful", "user": user_data}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -41,10 +45,13 @@ def login():
             "email": email,
             "password": password
         })
+        user_data = {
+            "id": response.user.id,
+            "email": response.user.email,
+        }
         return jsonify({
             "message": "Login successful",
-            "session": response.session,
-            "user": response.user
+            "user": user_data
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
