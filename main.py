@@ -27,6 +27,10 @@ def signup_page():
 def dashboard():
     return send_from_directory('templates', 'dashboard.html')
 
+@app.route('/notes-table')
+def notes_table():
+    return send_from_directory('templates', 'notes_table.html')
+
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.json
