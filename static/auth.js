@@ -13,6 +13,7 @@ async function handleSignIn(e) {
         const data = await response.json();
         if (response.ok) {
             localStorage.setItem('userEmail', email);
+            localStorage.setItem('access_token', data.session.access_token);
             window.location.href = '/dashboard';
         } else {
             alert(data.error);
