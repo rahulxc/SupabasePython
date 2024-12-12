@@ -17,8 +17,11 @@
             <button type="submit" class="btn">Save Note</button>
         </form>
 
-        <div id="notesList" class="notes-list">
-            <!-- Notes will be inserted here -->
+        <div class="saved-notes-section">
+            <h2>Saved Notes</h2>
+            <div id="notesList" class="notes-list">
+                <!-- Notes will be inserted here -->
+            </div>
         </div>
         
         <button onclick="handleLogout()" class="btn logout-btn">Sign Out</button>
@@ -26,44 +29,60 @@
     <script src="/static/auth.js"></script>
     <script>
         async function loadNotes() {
-            const response = await fetch('/notes', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            try {
+                const response = await fetch('/notes', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+                const notes = await response.json();
+                const notesList = document.getElementById('notesList');
+                if (notes.length === 0) {
+                    notesList.innerHTML = '<p class="no-notes">No saved notes yet</p>';
+                } else {
+                    notesList.innerHTML = notes.map(note => `
+                        <div class="note">
+                            <p>${note.content}</p>
+                            <button onclick="deleteNote('${note.id}')" class="delete-btn">Delete</button>
+                        </div>
+                    `).join('');
                 }
-            });
-            const notes = await response.json();
-            const notesList = document.getElementById('notesList');
-            notesList.innerHTML = notes.map(note => `
-                <div class="note">
-                    <p>${note.content}</p>
-                    <button onclick="deleteNote('${note.id}')" class="delete-btn">Delete</button>
-                </div>
-            `).join('');
+            } catch (error) {
+                console.error('Error loading notes:', error);
+            }
         }
 
         async function deleteNote(id) {
-            await fetch(`/notes/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                }
-            });
-            loadNotes();
+            try {
+                await fetch(`/notes/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+                loadNotes();
+            } catch (error) {
+                console.error('Error deleting note:', error);
+            }
         }
 
         document.getElementById('noteForm').onsubmit = async (e) => {
             e.preventDefault();
             const content = document.getElementById('noteContent').value;
-            await fetch('/notes', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                },
-                body: JSON.stringify({content})
-            });
-            document.getElementById('noteContent').value = '';
-            loadNotes();
+            try {
+                await fetch('/notes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    },
+                    body: JSON.stringify({content})
+                });
+                document.getElementById('noteContent').value = '';
+                loadNotes();
+            } catch (error) {
+                console.error('Error saving note:', error);
+            }
         };
 
         loadNotes();

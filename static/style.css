@@ -143,6 +143,21 @@ textarea {
   cursor: pointer;
 }
 
+.saved-notes-section {
+  margin: 32px 0;
+}
+
+.saved-notes-section h2 {
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.no-notes {
+  color: #717171;
+  text-align: center;
+  padding: 20px;
+}
+
 .logout-btn {
   background: #717171;
 }
