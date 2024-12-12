@@ -83,7 +83,8 @@ def logout():
 @app.route('/notes', methods=['GET'])
 def get_notes():
     try:
-        response = supabase.table('notes').select("*").order('created_at', desc=True).execute()
+        user = supabase.auth.get_user()
+        response = supabase.table('notes').select("*").eq('user_id', user.user.id).order('created_at', desc=True).execute()
         return jsonify(response.data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -94,7 +95,8 @@ def create_note():
     content = data.get('content')
     
     try:
-        response = supabase.table('notes').insert({"content": content}).execute()
+        user = supabase.auth.get_user()
+        response = supabase.table('notes').insert({"content": content, "user_id": user.user.id}).execute()
         return jsonify(response.data[0]), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
