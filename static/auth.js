@@ -46,19 +46,10 @@ async function handleSignUp(e) {
     }
 }
 
-// Set auth header for all requests
-function getAuthHeader() {
-    const token = localStorage.getItem('access_token');
-    return token ? `Bearer ${token}` : '';
-}
-
 async function handleLogout() {
     try {
         const response = await fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Authorization': getAuthHeader()
-            }
+            method: 'POST'
         });
         if (response.ok) {
             localStorage.removeItem('userEmail');

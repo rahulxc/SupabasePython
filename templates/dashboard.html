@@ -18,7 +18,7 @@
         </form>
 
         <div class="saved-notes-section">
-            <h2>Saved Notes</h2>
+            <h2>📝 Your Saved Notes</h2>
             <div id="notesList" class="notes-list">
                 <!-- Notes will be inserted here -->
             </div>
@@ -33,14 +33,9 @@
         document.getElementById('userEmail').textContent = userEmail || 'User';
         async function loadNotes() {
             try {
-                const token = localStorage.getItem('access_token');
-                if (!token) {
-                    window.location.href = '/signin';
-                    return;
-                }
                 const response = await fetch('/notes', {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                     }
                 });
                 const notes = await response.json();
