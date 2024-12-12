@@ -1,11 +1,11 @@
 
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect
 from supabase import create_client
 import os
 
 app = Flask(__name__)
+app.static_folder = 'static'
 
-# Initialize Supabase client
 supabase = create_client(
     os.environ.get("SUPABASE_URL"),
     os.environ.get("SUPABASE_KEY")
@@ -13,7 +13,19 @@ supabase = create_client(
 
 @app.route('/')
 def index():
-    return send_from_directory('templates', 'auth.html')
+    return send_from_directory('templates', 'index.html')
+
+@app.route('/signin')
+def signin_page():
+    return send_from_directory('templates', 'signin.html')
+
+@app.route('/signup')
+def signup_page():
+    return send_from_directory('templates', 'signup.html')
+
+@app.route('/dashboard')
+def dashboard():
+    return send_from_directory('templates', 'dashboard.html')
 
 @app.route('/signup', methods=['POST'])
 def signup():
