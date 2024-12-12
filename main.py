@@ -34,9 +34,13 @@ def signup():
     password = data.get('password')
     
     try:
+        # Sign up without email confirmation
         response = supabase.auth.sign_up({
             "email": email,
-            "password": password
+            "password": password,
+            "options": {
+                "data": {"email_confirm": True}
+            }
         })
         user_data = {
             "id": response.user.id,
