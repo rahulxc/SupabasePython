@@ -2,21 +2,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard | Modern Auth</title>
+    <title>Notes | Modern Auth</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
         <div class="welcome-hero">
-            <h1>Welcome back, <span id="userName"></span></h1>
-            <p>We're glad to see you again</p>
+            <h1>My Notes</h1>
+            <p>Capture your thoughts</p>
         </div>
-        <button onclick="handleLogout()" class="btn" style="width: 100%;">Sign Out</button>
+        
+        <form id="noteForm" class="note-form">
+            <textarea id="noteContent" placeholder="Write your note here..." required></textarea>
+            <button type="submit" class="btn">Save Note</button>
+        </form>
+
+        <div id="notesList" class="notes-list">
+            <!-- Notes will be inserted here -->
+        </div>
+        
+        <button onclick="handleLogout()" class="btn logout-btn">Sign Out</button>
     </div>
     <script src="/static/auth.js"></script>
     <script>
-        document.getElementById('userName').textContent = 
-            localStorage.getItem('userEmail')?.split('@')[0] || 'User';
+        async function loadNotes() {
+            const response = await fetch('/notes');
+            const notes = await response.json();
+            const notesList = document.getElementById('notesList');
+            notesList.innerHTML = notes.map(note => `
+                <div class="note">
+                    <p>${note.content}</p>
+                    <button onclick="deleteNote('${note.id}')" class="delete-btn">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        async function deleteNote(id) {
+            await fetch(`/notes/${id}`, { method: 'DELETE' });
+            loadNotes();
+        }
+
+        document.getElementById('noteForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('noteContent').value;
+            await fetch('/notes', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({content})
+            });
+            document.getElementById('noteContent').value = '';
+            loadNotes();
+        };
+
+        loadNotes();
     </script>
 </body>
 </html>

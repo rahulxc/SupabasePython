@@ -80,5 +80,32 @@ def logout():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@app.route('/notes', methods=['GET'])
+def get_notes():
+    try:
+        response = supabase.table('notes').select("*").order('created_at', desc=True).execute()
+        return jsonify(response.data), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/notes', methods=['POST'])
+def create_note():
+    data = request.json
+    content = data.get('content')
+    
+    try:
+        response = supabase.table('notes').insert({"content": content}).execute()
+        return jsonify(response.data[0]), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/notes/<note_id>', methods=['DELETE'])
+def delete_note(note_id):
+    try:
+        supabase.table('notes').delete().eq('id', note_id).execute()
+        return jsonify({"message": "Note deleted"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
